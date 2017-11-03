@@ -146,7 +146,7 @@ MonoBehaviour:
   height: 72
   seed: Liam
   useRandomSeed: 1
-  randomFillPercent: 55
+  randomFillPercent: 53
 --- !u!4 &144664627
 Transform:
   m_ObjectHideFlags: 0
