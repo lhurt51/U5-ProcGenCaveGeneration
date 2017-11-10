@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour {
 
+    // Choose how the map is displayed
+    public enum DrawMode { NoiseMap, Mesh };
+    public DrawMode drawMode;
+    // The place where we render our NoiseMap
+    public Renderer textureRender;
+
     public int width;
     public int height;
 
@@ -49,8 +55,24 @@ public class MapGenerator : MonoBehaviour {
             }
         }
 
-        MeshGenerator meshGen = GetComponent<MeshGenerator>();
-        meshGen.GenerateMesh(borderedMap, 1);
+        // Generate the floor or draw the noise map as a texture
+        if (drawMode == DrawMode.NoiseMap)
+            DrawTexture(TextureGenerator.TextureFromHeightMap(borderedMap));
+        else if (drawMode == DrawMode.Mesh) {
+            MeshGenerator meshGen = GetComponent<MeshGenerator>();
+            meshGen.GenerateMesh(borderedMap, 1);
+            // Setting the plane to in-active
+            textureRender.gameObject.SetActive(false);
+        }
+    }
+
+    public void DrawTexture(Texture2D texture) {
+        // Setting the plane to active
+        textureRender.gameObject.SetActive(true);
+        // Apllying the texture I created
+        textureRender.sharedMaterial.mainTexture = texture;
+        // Scaling the map accordingly
+        textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height) / 10.0f;
     }
 
     void ProcessMap() {
